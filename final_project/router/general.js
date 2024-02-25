@@ -11,24 +11,37 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
-    res.send(JSON.stringify(books,null,40));
-});
+public_users.get('/', (req, res) => {
+    new Promise((resolve) => {
+      setTimeout(() => resolve(books), 1000); // Simulate delay
+    })
+      .then((books) => {
+        res.send(JSON.stringify(books, null, 40));
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Internal server error");
+      });
+  });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
-  const isbn = req.params.isbn;
-  res.send(books[isbn])
-});
+public_users.get('/isbn/:isbn', (req, res) => {
+    const isbn = req.params.isbn;
+    new Promise((resolve) => {
+        setTimeout(() => resolve(books), 1000); // Simulate delay
+      })
+        .then((books) => {
+          res.send(JSON.stringify(books[isbn], null, 40));
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send("Internal server error");
+        });
+    });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
-    let keys = Object.keys(books);
-    const author = req.params.author;
-    if (key === author) => {
-        res.send(books);
-    }
-};
+//"public_users.get('/author/:author',function (req, res)"
+
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
