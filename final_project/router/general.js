@@ -5,27 +5,20 @@ let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
-public_users.post("/register", async (req,res) => {
-    const { username, password } = req.body;
-
-    if (!isValid(username, password)) {
-      return res.status(400).json({ message: "Invalid username or password format" });
-    }
-  
-    try {
-      // Check if username already exists
-      const existingUser = users.find((user) => user.username === username);
-      if (existingUser) {
-        return res.status(409).json({ message: "Username already exists" });
+public_users.post("/register", (req,res) => {
+    //Write your code here
+    const username = req.body.username
+    const password = req.body.password
+    if (username && password) {
+      if (!isValid(username)) {
+        users.push({"username":username,"password":password});
+        return res.status(200).json({message: "User successfully registred. Now you can login"});
+      } else {
+        return res.status(404).json({message: "User already exists!"});
       }
-  
-      const token = await registerUser(username, password);
-      res.json({ message: "User registered successfully", token });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
-  }
-});
+    }
+    return res.status(404).json({message: "Unable to register user."});
+  });
 
 // Get the book list available in the shop
 public_users.get('/', (req, res) => {
